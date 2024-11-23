@@ -34,12 +34,4 @@ app.add_middleware(
 
 
 
-# def initialize_firebase():
-#     cred = credentials.Certificate("path/to/serviceAccountKey.json")
-#     initialize_app(cred)
-#
-# initialize_firebase()
-
-
-
 
