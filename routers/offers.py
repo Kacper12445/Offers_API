@@ -1,0 +1,59 @@
+from fastapi import APIRouter, HTTPException
+from firebase_admin import firestore
+
+router = APIRouter()
+
+OFFERS_COLLECTION_NAME = 'oferty'
+
+
+def get_collection():
+    db = firestore.client()
+    return db.collection(OFFERS_COLLECTION_NAME)
+
+
+def handle_error(e: Exception):
+    raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/offers/{offer_id}")
+def get_offer_by_id(offer_id: str):
+    print(offer_id)
+    try:
+        doc = get_collection().document(offer_id).get()
+        if not doc.exists:
+            raise HTTPException(status_code=404, detail="Offer not found")
+        return doc.to_dict()
+    except Exception as e:
+        handle_error(e)
+
+
+@router.delete("/offers/{offer_id}")
+def delete_offer(offer_id: str):
+    try:
+        doc_ref = get_collection().document(offer_id)
+        if not doc_ref.get().exists:
+            raise HTTPException(status_code=404, detail="Offer not found")
+        doc_ref.delete()
+        return {"message": "Offer deleted successfully"}
+    except Exception as e:
+        handle_error(e)
+
+
+@router.post("/offers")
+def create_offer(offer: dict):
+    try:
+        doc_ref = get_collection().document()
+        doc_ref.set(offer)
+        return {"message": "Offer created successfully", "id": doc_ref.id}
+    except Exception as e:
+        handle_error(e)
+
+
+@router.get("/offers")
+def list_offers():
+    try:
+        return [doc.to_dict() for doc in get_collection().stream()]
+    except Exception as e:
+        handle_error(e)
+
+
