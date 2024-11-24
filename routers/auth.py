@@ -14,13 +14,12 @@ def get_auth_collection():
     return get_collection(AUTH_COLLECTION_NAME)
 
 
-def validate_api_key(api_key: str = Header(...)):
+def validate_api_key(apiKey: str = Header(...)):
     collection = get_auth_collection()
-    user_query = collection.where("apiKey", "==", api_key).stream()
+    user_query = collection.where("apiKey", "==", apiKey).stream()
     users = [user.to_dict() for user in user_query]
     if not users:
         raise HTTPException(status_code=401, detail="Invalid API key")
-    return users[0]
 
 
 @router.post("/register")

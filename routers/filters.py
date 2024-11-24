@@ -1,8 +1,14 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 
-from routers.utils import get_collection
+from routers.utils import get_collection, handle_error
+from routers.auth import validate_api_key
 
 router = APIRouter()
+
+
+class FilterFields:
+    POSITION = 'position',
+    CITY = 'city'
 
 
 def get_offers_collection():
@@ -10,22 +16,32 @@ def get_offers_collection():
     return get_collection(OFFERS_COLLECTION_NAME)
 
 
-@router.get("/positionFilters")
-def filter_by_position():
-    try:
-        # @TODO
-        # tasks = [doc.to_dict() for doc in collection.stream()]
-        return tasks
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+def filter_offers(items, filter_field):
+    filtered_items = set()
+    for item in items:
+        data = item.to_dict()
+        city = data.get(filter_field)
+        if city:
+            filtered_items.add(city)
+    return list(filtered_items)
 
+
+@router.get("/positionFilters")
+def filter_by_position(user: dict = Depends(validate_api_key)):
+    try:
+        collection = get_offers_collection()
+        offers = collection.stream()
+        return filter_offers(offers, FilterFields.POSITION)
+    except Exception as e:
+        handle_error(e)
 
 
 @router.get("/cityFilters")
-def filter_by_city():
+def filter_by_city(user: dict = Depends(validate_api_key)):
     try:
-        # @TODO
-        # tasks = [doc.to_dict() for doc in collection.stream()]
-        return tasks
+        collection = get_offers_collection()
+        offers = collection.stream()
+        return filter_offers(offers, FilterFields.CITY)
+
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        handle_error(e)

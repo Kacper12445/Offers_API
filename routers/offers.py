@@ -25,7 +25,7 @@ def get_offer_by_id(offer_id: str, user: dict = Depends(validate_api_key)):
 
 
 @router.delete("/offers/{offer_id}")
-def delete_offer(offer_id: str):
+def delete_offer(offer_id: str, user: dict = Depends(validate_api_key)):
     try:
         doc_ref = get_offers_collection().document(offer_id)
         if not doc_ref.get().exists:
@@ -37,7 +37,7 @@ def delete_offer(offer_id: str):
 
 
 @router.post("/offers")
-def create_offer(offer: Offer):
+def create_offer(offer: Offer, user: dict = Depends(validate_api_key)):
     try:
         doc_ref = get_offers_collection().document()
         doc_ref.set(offer)
@@ -47,7 +47,7 @@ def create_offer(offer: Offer):
 
 
 @router.get("/offers")
-def list_offers():
+def list_offers(user: dict = Depends(validate_api_key)):
     try:
         return [doc.to_dict() for doc in get_offers_collection().stream()]
     except Exception as e:
