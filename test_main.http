@@ -16,7 +16,7 @@ Content-Type: application/json
 
 {
   "username": "test123",
-  "password": "123test",
+  "password": "123test"
 }
 
 ###
@@ -25,7 +25,7 @@ Content-Type: application/json
 
 {
   "username": "lslsa",
-  "password": "epepe321",
+  "password": "epepe321"
 }
 ###
 

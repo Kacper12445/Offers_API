@@ -3,7 +3,7 @@ from uuid import uuid4
 
 from fastapi import APIRouter, HTTPException, Header
 
-from routers.models import User
+from models.models import User
 from routers.utils import get_collection, handle_error
 
 router = APIRouter()

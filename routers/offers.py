@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, Depends
 
-from routers.models import Offer
+from models.models import Offer
 from routers.utils import get_collection, handle_error
 from routers.auth import validate_api_key
 
