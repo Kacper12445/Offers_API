@@ -5,6 +5,11 @@ Accept: application/json
 
 ###
 
+GET http://127.0.0.1:8000/offers
+apiKey: 13f1b867b86c5a86b1095ca36285714d0c913e049a19958d9d2157ef99117921
+Accept: application/json
+###
+
 GET http://127.0.0.1:8000/offers/8l900qvww1FA5wIGpxLA
 apiKey: 13f1b867b86c5a86b1095ca36285714d0c913e049a19958d9d2157ef99117921
 Accept: application/json

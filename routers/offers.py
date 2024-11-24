@@ -19,7 +19,7 @@ def get_offer_by_id(offer_id: str, user: dict = Depends(validate_api_key)):
         doc = get_offers_collection().document(offer_id).get()
         if not doc.exists:
             raise HTTPException(status_code=404, detail="Offer not found")
-        return doc.to_dict()
+        return {"id": doc.id, **doc.to_dict()}
     except Exception as e:
         handle_error(e)
 
@@ -49,7 +49,7 @@ def create_offer(offer: Offer, user: dict = Depends(validate_api_key)):
 @router.get("/offers")
 def list_offers(user: dict = Depends(validate_api_key)):
     try:
-        return [doc.to_dict() for doc in get_offers_collection().stream()]
+        return [{"id": doc.id, **doc.to_dict()} for doc in get_offers_collection().stream()]
     except Exception as e:
         handle_error(e)
 
