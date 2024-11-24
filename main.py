@@ -1,4 +1,4 @@
-from routers import offers
+from routers import offers, auth
 
 from fastapi import FastAPI
 from dotenv import load_dotenv
@@ -9,7 +9,7 @@ from config import get_settings
 
 app = FastAPI()
 routers = [
-    # (auth.router, "/auth", ["auth"]),
+    auth.router,
     offers.router,
     # (filters.router, "/filters", ["filters"]),
 ]

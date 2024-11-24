@@ -1,14 +1,14 @@
-from fastapi import APIRouter, HTTPException
-from firebase_admin import firestore
+from fastapi import APIRouter, HTTPException, Depends
+
+from routers.utils import get_collection
+from routers.auth import validate_api_key
 
 router = APIRouter()
 
-OFFERS_COLLECTION_NAME = 'oferty'
 
-
-def get_collection():
-    db = firestore.client()
-    return db.collection(OFFERS_COLLECTION_NAME)
+def get_offers_collection():
+    OFFERS_COLLECTION_NAME = 'offers'
+    return get_collection(OFFERS_COLLECTION_NAME)
 
 
 def handle_error(e: Exception):
@@ -16,10 +16,10 @@ def handle_error(e: Exception):
 
 
 @router.get("/offers/{offer_id}")
-def get_offer_by_id(offer_id: str):
+def get_offer_by_id(offer_id: str, user: dict = Depends(validate_api_key)):
     print(offer_id)
     try:
-        doc = get_collection().document(offer_id).get()
+        doc = get_offers_collection().document(offer_id).get()
         if not doc.exists:
             raise HTTPException(status_code=404, detail="Offer not found")
         return doc.to_dict()
@@ -30,7 +30,7 @@ def get_offer_by_id(offer_id: str):
 @router.delete("/offers/{offer_id}")
 def delete_offer(offer_id: str):
     try:
-        doc_ref = get_collection().document(offer_id)
+        doc_ref = get_offers_collection().document(offer_id)
         if not doc_ref.get().exists:
             raise HTTPException(status_code=404, detail="Offer not found")
         doc_ref.delete()
@@ -42,7 +42,7 @@ def delete_offer(offer_id: str):
 @router.post("/offers")
 def create_offer(offer: dict):
     try:
-        doc_ref = get_collection().document()
+        doc_ref = get_offers_collection().document()
         doc_ref.set(offer)
         return {"message": "Offer created successfully", "id": doc_ref.id}
     except Exception as e:
@@ -52,7 +52,7 @@ def create_offer(offer: dict):
 @router.get("/offers")
 def list_offers():
     try:
-        return [doc.to_dict() for doc in get_collection().stream()]
+        return [doc.to_dict() for doc in get_offers_collection().stream()]
     except Exception as e:
         handle_error(e)
 

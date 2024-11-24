@@ -1,35 +1,66 @@
-# from fastapi import APIRouter, HTTPException
-# from pydantic import BaseModel
-# from firebase_admin import auth, firestore
-#
-# router = APIRouter()
-#
-#
-# db = firestore.client()
-# # @TODO CREATE COLLECTION
-# # collection = db.collection('auth')
-#
-# class User(BaseModel):
-#     email: str
-#     password: str
-#
-#
-# @router.post("/register")
-# def register(user: User):
-#     try:
-#         user_record = auth.create_user(
-#             email=user.email,
-#             password=user.password
-#         )
-#         return {"message": "User registered successfully", "uid": user_record.uid}
-#     except Exception as e:
-#         raise HTTPException(status_code=400, detail=str(e))
-#
-#
-# @router.post("/login")
-# def login(user: User):
-#     try:
-#         # Implement token generation or email/password verification logic
-#         return {"message": "Login successful for user", "email": user.email}
-#     except Exception as e:
-#         raise HTTPException(status_code=400, detail=str(e))
+import secrets
+from uuid import uuid4
+
+from fastapi import APIRouter, HTTPException, Header
+
+from routers.models import User
+from routers.utils import get_collection
+
+router = APIRouter()
+
+
+def get_auth_collection():
+    AUTH_COLLECTION_NAME = 'users'
+    return get_collection(AUTH_COLLECTION_NAME)
+
+
+def validate_api_key(api_key: str = Header(...)):
+    """Dependency to validate API key."""
+    collection = get_auth_collection()
+    user_query = collection.where("apiKey", "==", api_key).stream()
+    users = [user.to_dict() for user in user_query]
+    if not users:
+        raise HTTPException(status_code=401, detail="Invalid API key")
+    return users[0]
+
+
+@router.post("/register")
+def register_user(user: User):
+    """
+    Registers a new user with a username and password.
+    Generates a unique API key for the user.
+    """
+    try:
+        collection = get_auth_collection()
+        # Check if the username already exists
+        existing_user = collection.where("username", "==", user.username).stream()
+        if list(existing_user):
+            raise HTTPException(status_code=400, detail="Username already exists")
+
+        api_key = secrets.token_hex(32)
+        user_id = str(uuid4())
+        user_data = {
+            "username": user.username,
+            "password": user.password,
+            "apiKey": api_key,
+        }
+        collection.document(user_id).set(user_data)
+        return {"message": "User registered successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/login")
+def login_user(user: User):
+    try:
+        collection = get_auth_collection()
+        user_query = collection.where("username", "==", user.username).where("password", "==", user.password).stream()
+        user = next((doc.to_dict() for doc in user_query), None)
+
+        if not user:
+            raise HTTPException(status_code=401, detail="Invalid username or password")
+
+        return {"message": "Login successful", "api_key": user["apiKey"]}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
