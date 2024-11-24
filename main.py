@@ -7,7 +7,11 @@ from fastapi.middleware.cors import CORSMiddleware
 import firebase_admin
 from config import get_settings
 
-app = FastAPI()
+app = FastAPI(
+    title="Offers app API",
+    description="API for managing offers and users with Firebase backend.",
+    version="1.0.0"
+)
 routers = [
     auth.router,
     offers.router,
