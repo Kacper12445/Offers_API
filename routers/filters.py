@@ -7,7 +7,7 @@ router = APIRouter()
 
 
 class FilterFields:
-    POSITION = 'position',
+    POSITION = 'position'
     CITY = 'city'
 
 
@@ -20,9 +20,9 @@ def filter_offers(items, filter_field):
     filtered_items = set()
     for item in items:
         data = item.to_dict()
-        city = data.get(filter_field)
-        if city:
-            filtered_items.add(city)
+        field_item = data.get(filter_field)
+        if field_item:
+            filtered_items.add(field_item)
     return list(filtered_items)
 
 
@@ -42,6 +42,5 @@ def filter_by_city(user: dict = Depends(validate_api_key)):
         collection = get_offers_collection()
         offers = collection.stream()
         return filter_offers(offers, FilterFields.CITY)
-
     except Exception as e:
         handle_error(e)

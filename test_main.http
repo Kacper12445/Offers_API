@@ -27,3 +27,14 @@ Content-Type: application/json
   "username": "lslsa",
   "password": "epepe321",
 }
+###
+
+GET http://127.0.0.1:8000/positionFilters
+Content-Type: application/json
+apiKey: 13f1b867b86c5a86b1095ca36285714d0c913e049a19958d9d2157ef99117921
+
+
+###
+GET http://127.0.0.1:8000/cityFilters
+Content-Type: application/json
+apiKey: 13f1b867b86c5a86b1095ca36285714d0c913e049a19958d9d2157ef99117921
