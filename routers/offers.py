@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, Depends
 
-from routers.utils import get_collection
+from routers.utils import get_collection, handle_error
 from routers.auth import validate_api_key
 
 router = APIRouter()
@@ -10,9 +10,6 @@ def get_offers_collection():
     OFFERS_COLLECTION_NAME = 'offers'
     return get_collection(OFFERS_COLLECTION_NAME)
 
-
-def handle_error(e: Exception):
-    raise HTTPException(status_code=500, detail=str(e))
 
 
 @router.get("/offers/{offer_id}")

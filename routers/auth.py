@@ -4,7 +4,7 @@ from uuid import uuid4
 from fastapi import APIRouter, HTTPException, Header
 
 from routers.models import User
-from routers.utils import get_collection
+from routers.utils import get_collection, handle_error
 
 router = APIRouter()
 
@@ -47,7 +47,7 @@ def register_user(user: User):
         collection.document(user_id).set(user_data)
         return {"message": "User registered successfully"}
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        handle_error(e)
 
 
 @router.post("/login")
@@ -62,5 +62,5 @@ def login_user(user: User):
 
         return {"message": "Login successful", "api_key": user["apiKey"]}
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        handle_error(e)
 

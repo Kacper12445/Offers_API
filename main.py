@@ -15,7 +15,7 @@ app = FastAPI(
 routers = [
     auth.router,
     offers.router,
-    # (filters.router, "/filters", ["filters"]),
+    filters.router,
 ]
 [app.include_router(router) for router in routers]
 
