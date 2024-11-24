@@ -1,5 +1,6 @@
 from fastapi import APIRouter, HTTPException, Depends
 
+from routers.models import Offer
 from routers.utils import get_collection, handle_error
 from routers.auth import validate_api_key
 
@@ -9,7 +10,6 @@ router = APIRouter()
 def get_offers_collection():
     OFFERS_COLLECTION_NAME = 'offers'
     return get_collection(OFFERS_COLLECTION_NAME)
-
 
 
 @router.get("/offers/{offer_id}")
@@ -37,7 +37,7 @@ def delete_offer(offer_id: str):
 
 
 @router.post("/offers")
-def create_offer(offer: dict):
+def create_offer(offer: Offer):
     try:
         doc_ref = get_offers_collection().document()
         doc_ref.set(offer)

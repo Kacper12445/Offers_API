@@ -15,7 +15,6 @@ def get_auth_collection():
 
 
 def validate_api_key(api_key: str = Header(...)):
-    """Dependency to validate API key."""
     collection = get_auth_collection()
     user_query = collection.where("apiKey", "==", api_key).stream()
     users = [user.to_dict() for user in user_query]
@@ -26,13 +25,8 @@ def validate_api_key(api_key: str = Header(...)):
 
 @router.post("/register")
 def register_user(user: User):
-    """
-    Registers a new user with a username and password.
-    Generates a unique API key for the user.
-    """
     try:
         collection = get_auth_collection()
-        # Check if the username already exists
         existing_user = collection.where("username", "==", user.username).stream()
         if list(existing_user):
             raise HTTPException(status_code=400, detail="Username already exists")

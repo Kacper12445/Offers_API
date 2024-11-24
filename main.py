@@ -1,4 +1,4 @@
-from routers import offers, auth
+from routers import offers, auth, filters
 
 from fastapi import FastAPI
 from dotenv import load_dotenv

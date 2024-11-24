@@ -21,7 +21,7 @@ Content-Type: application/json
 
 {
   "username": "test123",
-  "password": "123test"
+  "password": "123test",
 }
 
 ###
@@ -29,6 +29,6 @@ POST http://127.0.0.1:8000/register/
 Content-Type: application/json
 
 {
-  "username": "pepe123",
-  "password": "epepe321"
+  "username": "lslsa",
+  "password": "epepe321",
 }
