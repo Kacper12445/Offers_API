@@ -27,7 +27,7 @@ def filter_offers(items, filter_field):
 
 
 @router.get("/positionFilters")
-def filter_by_position(user: dict = Depends(validate_api_key)):
+def filter_by_position():
     try:
         collection = get_offers_collection()
         offers = collection.stream()
@@ -37,7 +37,7 @@ def filter_by_position(user: dict = Depends(validate_api_key)):
 
 
 @router.get("/cityFilters")
-def filter_by_city(user: dict = Depends(validate_api_key)):
+def filter_by_city():
     try:
         collection = get_offers_collection()
         offers = collection.stream()
