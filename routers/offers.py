@@ -16,7 +16,6 @@ def get_offers_collection():
 
 @router.get("/offers/{offer_id}")
 def get_offer_by_id(offer_id: str):
-    print(offer_id)
     try:
         doc = get_offers_collection().document(offer_id).get()
         if not doc.exists:
