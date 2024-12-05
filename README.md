@@ -8,7 +8,7 @@ Make sure you have the following installed on your system:
 2. **pip**: Python package manager (comes with Python)
 3. **virtualenv** (optional but recommended): `pip install virtualenv`
 4. **Generate keys for HTTPS**: `openssl req -x509 -newkey rsa:4096 -nodes -out cert.pem -keyout key.pem -days 365`
-5Create a Virtual Environment (optional but recommended): `python -m venv .venv
+5. **Create a Virtual Environment (optional but recommended)**: `python -m venv .venv
 source .venv/bin/activate`  # On Windows, use `.venv\Scripts\activate`
 ---
 
