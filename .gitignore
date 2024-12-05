@@ -1,2 +1,4 @@
 .env
 service-account.json
+cert.pem
+key.pem
