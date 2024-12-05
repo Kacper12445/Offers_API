@@ -40,6 +40,7 @@ def register_user(user: User):
         collection.document(user_id).set(user_data)
         return {"message": "User registered successfully"}
     except Exception as e:
+        print(e)
         handle_error(e)
 
 
@@ -48,12 +49,15 @@ def login_user(user: User):
     try:
         collection = get_auth_collection()
         user_query = collection.where("username", "==", user.username).where("password", "==", user.password).stream()
-        user = next((doc.to_dict() for doc in user_query), None)
 
-        if not user:
+        user_data = next((doc.to_dict() for doc in user_query), None)
+
+        if not user_data:
             raise HTTPException(status_code=401, detail="Invalid username or password")
 
-        return {"message": "Login successful", "api_key": user["apiKey"]}
+        return {"message": "Login successful", "api_key": user_data["apiKey"]}
+
+    except HTTPException as http_exc:
+        raise http_exc
     except Exception as e:
         handle_error(e)
-

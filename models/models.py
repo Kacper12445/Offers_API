@@ -16,6 +16,7 @@ class Offer(BaseModel):
     phoneNumber: str
     email: str
     ownerKey: str
+    company: str
 
     class Config:
         extra = "forbid"
