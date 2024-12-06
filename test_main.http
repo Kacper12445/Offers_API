@@ -5,7 +5,7 @@ Accept: application/json
 
 ###
 
-GET http://127.0.0.1:8000/offers?city=Wroclaw,Krakow&position=kelner
+GET https://127.0.0.1:8000/offers?cities=Wroclaw
 apiKey: 13f1b867b86c5a86b1095ca36285714d0c913e049a19958d9d2157ef99117921
 Accept: application/json
 ###
@@ -37,6 +37,13 @@ Content-Type: application/json
   "username": "test123",
   "password": "123test"
 }
+
+###
+DELETE https://127.0.0.1:8000/offers/XvD3MCUYLMgwrFYCZT0v
+apiKey: 13f1b867b86c5a86b1095ca36285714d0c913e049a19958d9d2157ef99117921
+Content-Type: application/json
+
+###
 
 ###
 POST http://127.0.0.1:8000/register/

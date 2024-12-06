@@ -1,4 +1,5 @@
 from typing import Optional
+from urllib.request import Request
 
 from fastapi import APIRouter, HTTPException, Depends, Query
 
@@ -21,6 +22,8 @@ def get_offer_by_id(offer_id: str):
         if not doc.exists:
             raise HTTPException(status_code=404, detail="Offer not found")
         return {"id": doc.id, **doc.to_dict()}
+    except HTTPException as http_exc:
+        raise http_exc
     except Exception as e:
         handle_error(e)
 
@@ -33,6 +36,8 @@ def delete_offer(offer_id: str, user: dict = Depends(validate_api_key)):
             raise HTTPException(status_code=404, detail="Offer not found")
         doc_ref.delete()
         return {"message": "Offer deleted successfully"}
+    except HTTPException as http_exc:
+        raise http_exc
     except Exception as e:
         handle_error(e)
 
